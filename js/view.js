@@ -5,8 +5,11 @@ window.addEventListener("load", () => {
 })
 
 function updateView() {
+    const currentLocation = model.fields.currentLocation;
+    const headerText = !currentLocation.error && currentLocation.lon && currentLocation.lat ? `Weather for location: lat: ${currentLocation.lat}, lon: ${currentLocation.lon}` : currentLocation.error;
     document.getElementById('app').innerHTML = /* html */ `
-        ${getDateListHTML()}
+        <h1>${headerText || ''}</h1>
+        ${(model.forecast != null) ? getDateListHTML() : "Loading..."}
     `;
 }
 
@@ -20,8 +23,10 @@ function getDateListHTML() {
 
     for (let day in forecastByDay) {
         daysHTML += /* html */ `
+        <div>
             <h1>${day}</h1>
             ${getDayForcastHTML(forecastByDay[day])}
+        </div>
         `;
     }
 
@@ -35,31 +40,36 @@ function getDateListHTML() {
 function getDayForcastHTML(day) {
     let dayHTML = '';
     for (let forecast of day) {
-        console.log(forecast);
-        const localTime = new Date(forecast.time).toLocaleTimeString();
-
-        let symbol_code = null;
-
-        if (forecast.data.hasOwnProperty('next_1_hours')) {
-            symbol_code = forecast.data.next_1_hours.summary.symbol_code;
-        } else if (forecast.data.hasOwnProperty('next_6_hours')) {
-            symbol_code = forecast.data.next_6_hours.summary.symbol_code;
-        } else if (forecast.data.hasOwnProperty('next_12_hours')) {
-            symbol_code = forecast.data.next_12_hours.summary.symbol_code;
-        }
+        const localTime = new Date(forecast.time).toLocaleTimeString('nb-NO', {timeStyle: "short",});
+        const symbol_code = getSymbalCode(forecast);
+        const details = forecast.data.instant.details;
         
         dayHTML += /* html */ `
-            <div style="display:flex;">
-                <div>${localTime}</div>
-                <div>${getSymbol(symbol_code)}</div>
+            <div class="forecast-hour">
+                <span>${localTime}</span>
+                ${getSymbol(symbol_code)}
+                <span class="air-temperature">${details.air_temperature}°C</span>
             </div>
         `;
     }
     return /* html */ `
-        <div>
+        <div class="forecast-day">
             ${dayHTML}
         </div>
     `;
+}
+
+function getSymbalCode(forecast) {
+    let symbol_code = null;
+
+    if (forecast.data.hasOwnProperty('next_1_hours')) {
+        symbol_code = forecast.data.next_1_hours.summary.symbol_code;
+    } else if (forecast.data.hasOwnProperty('next_6_hours')) {
+        symbol_code = forecast.data.next_6_hours.summary.symbol_code;
+    } else if (forecast.data.hasOwnProperty('next_12_hours')) {
+        symbol_code = forecast.data.next_12_hours.summary.symbol_code;
+    }
+    return symbol_code;
 }
 
 function getSymbol(symbol_code) {

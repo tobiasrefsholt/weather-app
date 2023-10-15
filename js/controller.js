@@ -9,13 +9,18 @@ function setCurrentLocation() {
     const currentLocation = model.fields.currentLocation;
 
     function success(position) {
+        currentLocation.error = null;
         currentLocation.lat = position.coords.latitude;
         currentLocation.lon = position.coords.longitude;
+        updateView();
         getForecast();
     }
 
     function error() {
         currentLocation.error = "Unable to retrieve your location";
+        currentLocation.lat = null;
+        currentLocation.lon = null;
+        updateView();
     }
 
     if (!navigator.geolocation) {
