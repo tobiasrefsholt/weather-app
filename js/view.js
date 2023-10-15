@@ -38,7 +38,7 @@ function getDayForcastHTML(day) {
         console.log(forecast);
         const localTime = new Date(forecast.time).toLocaleTimeString();
 
-        let symbol_code = '';
+        let symbol_code = null;
 
         if (forecast.data.hasOwnProperty('next_1_hours')) {
             symbol_code = forecast.data.next_1_hours.summary.symbol_code;
@@ -51,7 +51,7 @@ function getDayForcastHTML(day) {
         dayHTML += /* html */ `
             <div style="display:flex;">
                 <div>${localTime}</div>
-                <div>${symbol_code}</div>
+                <div>${getSymbol(symbol_code)}</div>
             </div>
         `;
     }
@@ -59,6 +59,15 @@ function getDayForcastHTML(day) {
         <div>
             ${dayHTML}
         </div>
+    `;
+}
+
+function getSymbol(symbol_code) {
+    if (symbol_code == null) return '';
+    const symbolKey = model.weatherSymbolKeys[symbol_code];
+
+    return /* html */ `
+        <img src="../symbols/darkmode/svg/${symbolKey}.svg" alt="">
     `;
 }
 
