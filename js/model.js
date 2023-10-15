@@ -97,4 +97,5 @@ const model = {
         lightsnow: '49',
         heavysnow: '50',
       },
+      weekdays: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
 }

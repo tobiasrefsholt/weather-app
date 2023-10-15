@@ -15,16 +15,14 @@ function updateView() {
 
 function getDateListHTML() {
     const forecast = model.forecast.properties.timeseries;
-    let daysHTML = '';
-
     const forecastByDay = groupForecastByDay(forecast);
-
-    /* console.log(forecastByDay); */
-
+    const currentDate = new Date();
+    let daysHTML = '';
+    
     for (let day in forecastByDay) {
         daysHTML += /* html */ `
         <div>
-            <h1>${day}</h1>
+            <h1>${getDisplayDate(day, currentDate)}</h1>
             ${getDayForcastHTML(forecastByDay[day])}
         </div>
         `;
@@ -35,6 +33,17 @@ function getDateListHTML() {
             ${daysHTML}
         </div>
     `
+}
+
+function getDisplayDate(day, currentDate) {
+    const forecastDate = new Date(day);
+    let displayDate = '';
+    if (forecastDate.getTime() < currentDate.getTime() + 604800000) {
+        displayDate = model.weekdays[forecastDate.getDay()];
+    } else {
+        displayDate = forecastDate.toLocaleDateString();
+    }
+    return displayDate;
 }
 
 function getDayForcastHTML(day) {
