@@ -30,6 +30,6 @@ async function getForecast() {
     const lat = model.fields.currentLocation.lat;
     const lon = model.fields.currentLocation.lon;
     const response = await fetch(`https://api.met.no/weatherapi/locationforecast/2.0/complete?lat=${lat}&lon=${lon}`);
-    const forecast = await response.json();
-    model.forecast = forecast;
+    model.forecast = await response.json();
+    updateView();
 }
