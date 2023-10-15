@@ -8,7 +8,7 @@ function updateView() {
     const currentLocation = model.fields.currentLocation;
     const headerText = !currentLocation.error && currentLocation.lon && currentLocation.lat ? `Weather for location: lat: ${currentLocation.lat}, lon: ${currentLocation.lon}` : currentLocation.error;
     document.getElementById('app').innerHTML = /* html */ `
-        <h1>${headerText || ''}</h1>
+        <h1 class="main-header">${headerText || ''}</h1>
         ${(model.forecast != null) ? getDateListHTML() : "Loading..."}
     `;
 }
@@ -51,14 +51,15 @@ function getDayForcastHTML(day) {
     let dayHTML = '';
     for (let forecast of day) {
         const localTime = new Date(forecast.time).toLocaleTimeString('nb-NO', {timeStyle: "short",});
-        const symbol_code = getSymbalCode(forecast);
+        const shortestSummary = getShortestSummary(forecast);
         const details = forecast.data.instant.details;
         
         dayHTML += /* html */ `
             <div class="forecast-hour">
                 <span>${localTime}</span>
-                ${getSymbol(symbol_code)}
+                ${shortestSummary ? getSymbol(shortestSummary.summary.symbol_code) : ''}
                 <span class="air-temperature">${details.air_temperature}°</span>
+                <span class="precipitation-amount">${shortestSummary ? shortestSummary.details.precipitation_amount : 0}&nbsp;mm</span>
                 <img class="wind-direction" style="transform: rotate(${details.wind_from_direction}deg);" src="../symbols/darkmode/svg/arrow.svg" alt="">
                 <span class="wind-speed">${details.wind_speed}&nbsp;m/s</span>
             </div>
@@ -71,17 +72,17 @@ function getDayForcastHTML(day) {
     `;
 }
 
-function getSymbalCode(forecast) {
-    let symbol_code = null;
+function getShortestSummary(forecast) {
+    let summary = null;
 
     if (forecast.data.hasOwnProperty('next_1_hours')) {
-        symbol_code = forecast.data.next_1_hours.summary.symbol_code;
+        summary = forecast.data.next_1_hours;
     } else if (forecast.data.hasOwnProperty('next_6_hours')) {
-        symbol_code = forecast.data.next_6_hours.summary.symbol_code;
+        summary = forecast.data.next_6_hours;
     } else if (forecast.data.hasOwnProperty('next_12_hours')) {
-        symbol_code = forecast.data.next_12_hours.summary.symbol_code;
+        summary = forecast.data.next_12_hours;
     }
-    return symbol_code;
+    return summary;
 }
 
 function getSymbol(symbol_code) {
@@ -89,7 +90,7 @@ function getSymbol(symbol_code) {
     const symbolKey = model.weatherSymbolKeys[symbol_code];
 
     return /* html */ `
-        <img src="../symbols/darkmode/svg/${symbolKey}.svg" alt="">
+        <img class="weather-symbol" src="../symbols/darkmode/svg/${symbolKey}.svg" alt="">
     `;
 }
 
