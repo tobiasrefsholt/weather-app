@@ -18,12 +18,13 @@ function getDateListHTML() {
     const forecastByDay = groupForecastByDay(forecast);
     const currentDate = new Date();
     let daysHTML = '';
-    
+
     for (let day in forecastByDay) {
         daysHTML += /* html */ `
         <div>
             <h1>${getDisplayDate(day, currentDate)}</h1>
             ${getDayForcastHTML(forecastByDay[day])}
+
         </div>
         `;
     }
@@ -57,7 +58,9 @@ function getDayForcastHTML(day) {
             <div class="forecast-hour">
                 <span>${localTime}</span>
                 ${getSymbol(symbol_code)}
-                <span class="air-temperature">${details.air_temperature}°C</span>
+                <span class="air-temperature">${details.air_temperature}°</span>
+                <img class="wind-direction" style="transform: rotate(${details.wind_from_direction}deg);" src="../symbols/darkmode/svg/arrow.svg" alt="">
+                <span class="wind-speed">${details.wind_speed}&nbsp;m/s</span>
             </div>
         `;
     }

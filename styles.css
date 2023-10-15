@@ -28,9 +28,14 @@ body {
     gap: 1rem;
 }
 
-    .forecast-hour .air-temperature {
+    .forecast-hour .air-temperature, .forecast-hour .wind-speed {
         min-width: 3rem;
         text-align: right;
+    }
+
+    .forecast-hour .wind-direction {
+        width: 2rem;
+        height: 2rem;
     }
 
 .forecast-day img {
