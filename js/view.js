@@ -60,7 +60,7 @@ function getDayForcastHTML(day) {
                 ${shortestSummary ? getSymbol(shortestSummary.summary.symbol_code) : ''}
                 <span class="air-temperature">${details.air_temperature}°</span>
                 <span class="precipitation-amount">${shortestSummary ? shortestSummary.details.precipitation_amount : 0}&nbsp;mm</span>
-                <img class="wind-direction" style="transform: rotate(${details.wind_from_direction}deg);" src="../symbols/darkmode/svg/arrow.svg" alt="">
+                <img class="wind-direction" style="transform: rotate(${details.wind_from_direction}deg);" src="symbols/darkmode/svg/arrow.svg" alt="">
                 <span class="wind-speed">${details.wind_speed}&nbsp;m/s</span>
             </div>
         `;
@@ -90,7 +90,7 @@ function getSymbol(symbol_code) {
     const symbolKey = model.weatherSymbolKeys[symbol_code];
 
     return /* html */ `
-        <img class="weather-symbol" src="../symbols/darkmode/svg/${symbolKey}.svg" alt="">
+        <img class="weather-symbol" src="symbols/darkmode/svg/${symbolKey}.svg" alt="">
     `;
 }
 
